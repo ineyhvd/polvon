@@ -1,18 +1,21 @@
 from django.shortcuts import render
+from rest_framework.generics import RetrieveUpdateAPIView
 
 # Create your views here.
 
-def home(request):
-    return render(request,'home.html')
-
-def details(request):
-    return render(request,'detail.html')
+# def home(request):
+#     return render(request,'home.html')
+#
+# def details(request):
+#     return render(request,'detail.html')
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Comment
-from .serializers import CommentSerializer
+from .models import Comment, Product
+from .permissions import DistrictPermission , TimeDistrictPermission
+from .serializers import CommentSerializer, DistrictSerializer, ProductSerializer
+
 
 class CommentListCreateView(APIView):
     def get(self, request):
@@ -57,3 +60,24 @@ class CommentDetailView(APIView):
             return Response({"error": "Izoh topilmadi"}, status=status.HTTP_404_NOT_FOUND)
         comment.delete()
         return Response({"message": "Izoh o‘chirildi"}, status=status.HTTP_204_NO_CONTENT)
+
+
+class DistrictView(RetrieveUpdateAPIView):
+    serializer_class = ProductSerializer
+    queryset = Comment.objects.all()
+    permission_classes = (DistrictPermission,)
+
+class TimeDistrictView(RetrieveUpdateAPIView):
+    serializer_class = DistrictSerializer
+    queryset = Comment.objects.all()
+    permission_classes = (TimeDistrictPermission,)
+
+class ProductView(APIView):
+    def get(self, request):
+        products = Product.objects.all()
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+
