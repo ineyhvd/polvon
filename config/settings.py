@@ -44,7 +44,9 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
-    'user'
+    'user',
+    'rest_framework.authtoken',
+    'debug_toolbar',
 
 ]
 
@@ -56,6 +58,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
+
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -113,7 +117,10 @@ AUTH_PASSWORD_VALIDATORS = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ) ,
+    'DEFAULT_PAGINATION_CLASS': 'polvon.pagination.CustomLimitOffsetPagination',
+    'PAGE_SIZE': 100 ,
+
 }
 
 SIMPLE_JWT = {
@@ -154,5 +161,11 @@ BATON = {
     'SITE_TITLE': 'Admin Panel',
     'INDEX_TITLE': 'Welcome to the Polvon.uz',
 }
+
+INTERNAL_IPS = [
+    # ...
+    "127.0.0.1",
+    # ...
+]
 
 AUTH_USER_MODEL = 'user.User'
