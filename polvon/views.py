@@ -1,15 +1,6 @@
 from django.shortcuts import render
+from django.core.cache import cache
 from rest_framework.generics import RetrieveUpdateAPIView, ListAPIView
-
-
-# Create your views here.
-
-# def home(request):
-#     return render(request,'home.html')
-#
-# def details(request):
-#     return render(request,'detail.html')
-
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -80,10 +71,13 @@ class ProductView(ListAPIView):
     pagination_class = ProductPagination
 
     def get_queryset(self):
-        queryset = Product.objects.all()
-        if queryset is None:
-            return Product.objects.none()
-        return queryset
+        products=cache.get('products')
+
+        if products is None:
+            products = Product.objects.all()
+            cache.set('products', products , timeout=300)
+
+        return products
 
 
 
