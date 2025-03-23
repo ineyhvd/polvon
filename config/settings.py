@@ -117,10 +117,9 @@ AUTH_PASSWORD_VALIDATORS = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ) ,
-    'DEFAULT_PAGINATION_CLASS': 'polvon.pagination.CustomLimitOffsetPagination',
-    'PAGE_SIZE': 100 ,
-
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
 }
 
 SIMPLE_JWT = {
@@ -144,7 +143,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
+    os.path.join(BASE_DIR,"polvon" , "static"),
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
@@ -169,3 +168,6 @@ INTERNAL_IPS = [
 ]
 
 AUTH_USER_MODEL = 'user.User'
+
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 5000
+

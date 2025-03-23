@@ -9,6 +9,5 @@ urlpatterns = [
     path('comment-detail/<int:pk>/', views.CommentDetailView.as_view(), name='comment-detail'),
     path('time-district/<int:pk>' , views.TimeDistrictView.as_view(), name='time-district'),
     path('day-district/' , views.DistrictView.as_view(), name='day-district'),
-
     path('product-list/' , views.ProductView.as_view(), name='product_list'),
 ]

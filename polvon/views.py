@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from rest_framework.generics import RetrieveUpdateAPIView
+from rest_framework.generics import RetrieveUpdateAPIView, ListAPIView
+
 
 # Create your views here.
 
@@ -13,7 +14,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Comment, Product
-from .pagination import CustomLimitOffsetPagination
+from .pagination import ProductPagination
 from .permissions import DistrictPermission , TimeDistrictPermission
 from .serializers import CommentSerializer, DistrictSerializer, ProductSerializer
 from polvon import pagination
@@ -74,13 +75,15 @@ class TimeDistrictView(RetrieveUpdateAPIView):
     queryset = Comment.objects.all()
     permission_classes = (TimeDistrictPermission,)
 
-class ProductView(APIView):
-    pagination_class = CustomLimitOffsetPagination
-    def get(self, request):
-        products = Product.objects.all()
-        serializer = ProductSerializer(products, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+class ProductView(ListAPIView):
+    serializer_class = ProductSerializer
+    pagination_class = ProductPagination
 
+    def get_queryset(self):
+        queryset = Product.objects.all()
+        if queryset is None:
+            return Product.objects.none()
+        return queryset
 
 
 
