@@ -24,6 +24,16 @@ class CommentListCreateView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def get_queryset(self):
+        comments=cache.get('comments')
+
+        if comments is None:
+            comments = Comment.objects.all()
+            cache.set('comments', comments,timeout=300)
+
+        return comments
+
+
 class CommentDetailView(APIView):
     def get_object(self, pk):
         try:
